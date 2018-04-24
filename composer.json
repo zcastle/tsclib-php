@@ -1,0 +1,31 @@
+{
+    "name": "zcastle/tsclib-php",
+    "description": "Libreria para etiquetadora TSC",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jimbert Castillo",
+            "email": "jzcastle@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zcastle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Tsc\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit --bootstrap vendor/autoload.php tests/TestLib"
+    }
+}
