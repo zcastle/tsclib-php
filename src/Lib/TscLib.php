@@ -88,6 +88,20 @@ class TscLib {
 		return $this;
     }
 
+    public function bar($x, $y, $width, $height) {
+        if($this->connector == null){
+            throw new Exception("No esta conectado", 1);
+        }
+
+        $bar = "BAR " . $x . ", " . $y . ", " . $width . ", " . $height;
+
+        $message = $bar . "\r\n";
+
+        $this->connector->write($message);
+
+        return $this;
+    }
+
     public function sendCommand($message) {
         if($this->connector == null){
 			throw new Exception("No esta conectado", 1);
