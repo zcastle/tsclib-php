@@ -1,11 +1,12 @@
 <?php
 
-namespace Zcastle\Lib\Common;
+namespace Zcastle\Lib;
 
 // TSPL/TSPL2 Programming Language
 
-class Text {
+class C {
 
+	//TEXT
 	const FONT_0 = 0; // Monotye CG Triumvirate Bold Condensed, font width and height is stretchable
 	const FONT_1 = 1; // 8 x 12 fixed pitch dot font
 	const FONT_2 = 2; // 12 x 20 fixed pitch dot font
@@ -25,5 +26,12 @@ class Text {
 	const ALIGN_LEFT = 1;
     const ALIGN_CENTER = 2;
     const ALIGN_RIGHT = 3;
+
+    //BARCODE
+
+    const HUMAN_NO_READABLE = 0;
+    const HUMAN_READABLE_ALIGN_LEFT = 1;
+    const HUMAN_READABLE_ALIGN_CENTER = 2;
+    const HUMAN_READABLE_ALIGN_RIGHT = 3;
 
 }

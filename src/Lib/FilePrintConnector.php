@@ -22,11 +22,6 @@ class FilePrintConnector implements PrintConnector {
 	
 	public function write($data) {
 		fwrite($this->fp, $data);
-		//return stream_get_contents($this->fp);
-		/*$a = [];
-		while ($line = fgets($fp)){
-		}*/
-		//return fgets($this->fp);
 	}
 
 	public function getFp(){

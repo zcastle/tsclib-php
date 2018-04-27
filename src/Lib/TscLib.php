@@ -6,15 +6,6 @@ namespace Zcastle\Lib;
 
 class TscLib {
 
-	const ALIGN_LEFT = 1;
-    const ALIGN_CENTER = 2;
-    const ALIGN_RIGHT = 3;
-
-    const HUMAN_NO_READABLE = 0;
-    const HUMAN_READABLE_ALIGN_LEFT = 1;
-    const HUMAN_READABLE_ALIGN_CENTER = 2;
-    const HUMAN_READABLE_ALIGN_RIGHT = 3;
-
     const ESTADO_NORMAL = "Normal";
 
 	private $connector = null;
@@ -27,10 +18,6 @@ class TscLib {
 	}
 
 	public function setup($width, $height, $speed, $density, $sensor, $sensor_distance, $sensor_offset){
-		if($this->connector == null){
-			throw new Exception("No esta conectado", 1);
-		}
-
         $size = "SIZE " . $width . " mm" . ", " . $height . " mm";
         $speed_value = "SPEED " . $speed;
         $density_value = "DENSITY " . $density;
@@ -42,95 +29,63 @@ class TscLib {
             $sensor_value = "BLINE " . $sensor_distance . " mm" . ", " . $sensor_offset . " mm";
         }
 
-        $message = $size . "\r\n" . $speed_value . "\r\n" . $density_value . "\r\n" . $sensor_value . "\r\n";
+        $message = $size . "\r\n" . $speed_value . "\r\n" . $density_value . "\r\n" . $sensor_value;
 
-		$this->connector->write($message);
-
-		return $this;
+		return $this->sendCommand($message);
 	}
 
-	public function clearbuffer(){
-		if($this->connector == null){
-			throw new Exception("No esta conectado", 1);
-		}
+	public function clearBuffer(){
 
-		$this->connector->write("CLS\r\n");
-
-		return $this;
+		return $this->sendCommand("CLS");
 	}
 
-	public function printerfont($x, $y, $size, $rotation, $x_value, $y_value, $align, $string){
-		if($this->connector == null){
-			throw new Exception("No esta conectado", 1);
-		}
+	public function printerFont($x, $y, $size, $rotation, $x_value, $y_value, $align, $string){
 
         $text = "TEXT ";
         $position = $x . "," . $y;
         $size_value = "\"" . $size . "\"";
         $string_value = "\"" . $string . "\"";
 
-        $message = $text . $position . " ," . $size_value . " ," . $rotation . " ," . $x_value . " ," . $y_value . " ," . $align . " ," . $string_value . "\r\n";
+        $message = $text . $position . " ," . $size_value . " ," . $rotation . " ," . $x_value . " ," . $y_value . " ," . $align . " ," . $string_value;
 
-        $this->connector->write($message);
-
-		return $this;
+        return $this->sendCommand($message);
 	}
 
-	public function barcode($x, $y, $type, $height, $human_readable, $rotation, $narrow, $wide, $align, $string) {
-        if($this->connector == null){
-			throw new Exception("No esta conectado", 1);
-		}
+	public function barCode($x, $y, $type, $height, $human_readable, $rotation, $narrow, $wide, $align, $string) {
 
         $barcode = "BARCODE ";
         $position = $x . "," . $y;
         $mode = "\"" . $type . "\"";
         $string_value = "\"" . $string . "\"";
 
-        $message = $barcode . $position . " ," . $mode . " ," . $height . " ," . $human_readable . " ," . $rotation . " ," . $narrow . " ," . $wide  . " ," . $align . " ," . $string_value . "\r\n";
+        $message = $barcode . $position . " ," . $mode . " ," . $height . " ," . $human_readable . " ," . $rotation . " ," . $narrow . " ," . $wide  . " ," . $align . " ," . $string_value;
 
-        $this->connector->write($message);
-
-		return $this;
+        return $this->sendCommand($message);
     }
 
     public function bar($x, $y, $width, $height) {
-        if($this->connector == null){
-            throw new Exception("No esta conectado", 1);
-        }
 
-        $bar = "BAR " . $x . ", " . $y . ", " . $width . ", " . $height;
+        $message = "BAR " . $x . ", " . $y . ", " . $width . ", " . $height;
 
-        $message = $bar . "\r\n";
+        return $this->sendCommand($message);
+    }
 
-        $this->connector->write($message);
+    public function printLabel($quantity = 1, $copy = 1){
 
-        return $this;
+    	return $this->sendCommand("PRINT " . $quantity . ", " . $copy);
     }
 
     public function sendCommand($message) {
         if($this->connector == null){
-			throw new Exception("No esta conectado", 1);
-		}
+            throw new Exception("No esta conectado", 1);
+        }
         
-        $responseCommand = $this->connector->write($message . "\n");
-        //$this->connector->write($message);
+        $this->connector->write($message . "\r\n");
 
-		return $this;
+        return $this;
     }
 
-    public function getResponseCommand(){
-        return $this->responseCommand;
-    }
-
-    public function printlabel($quantity, $copy){
-    	if($this->connector == null){
-			throw new Exception("No esta conectado", 1);
-		}
-
-    	$this->connector->write("PRINT " . $quantity . ", " . $copy . "\r\n");
-    }
-
-    public function closeport(){
+    public function close(){
     	if($this->connector == null){
 			throw new Exception("No esta conectado", 1);
 		}
@@ -142,7 +97,7 @@ class TscLib {
         }
     }
 
-    public function status(){
+    public function getStatus(){
         $output = "No se ha podido consulta el estado";
         $ruta = dirname(__FILE__);
         $ip = $this->connector->getIp();
