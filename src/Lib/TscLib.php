@@ -2,6 +2,8 @@
 
 namespace Zcastle\Lib;
 
+// TSPL/TSPL2 Programming Language
+
 class TscLib {
 
 	const ALIGN_LEFT = 1;
@@ -13,7 +15,10 @@ class TscLib {
     const HUMAN_READABLE_ALIGN_CENTER = 2;
     const HUMAN_READABLE_ALIGN_RIGHT = 3;
 
+    const ESTADO_NORMAL = "Normal";
+
 	private $connector = null;
+    private $responseCommand;
 
 	public function __construct(PrintConnector $connector = null) {
 		$this->connector = $connector;
@@ -107,9 +112,14 @@ class TscLib {
 			throw new Exception("No esta conectado", 1);
 		}
         
-        $this->connector->write($message . "\n");
+        $responseCommand = $this->connector->write($message . "\n");
+        //$this->connector->write($message);
 
 		return $this;
+    }
+
+    public function getResponseCommand(){
+        return $this->responseCommand;
     }
 
     public function printlabel($quantity, $copy){
@@ -131,6 +141,16 @@ class TscLib {
             return false;
         }
     }
+
+    public function status(){
+        $output = "No se ha podido consulta el estado";
+        $ruta = dirname(__FILE__);
+        $ip = $this->connector->getIp();
+        $port = $this->connector->getPort();
+        exec("cd $ruta && java TscStatus $ip $port", $output);
+        return $output[0];
+    }
+
 }
 
 ?>

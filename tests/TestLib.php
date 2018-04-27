@@ -10,7 +10,9 @@ use Zcastle\Lib\TscLib;
 final class TestLib extends TestCase {
 
 	public function test(){
-		$connector = new NetworkPrintConnector("192.168.2.23", 9100);
+		$ip = "192.168.2.23";
+		$port = 9100;
+		/*$connector = new NetworkPrintConnector("192.168.2.23", 9100);
 		$tscLib = new TscLib($connector);
 		$tscLib->setup(53, 27, 5, 5, 0, 2, 0);
 		$tscLib->clearbuffer();
@@ -20,7 +22,25 @@ final class TestLib extends TestCase {
 
 		$tscLib->printlabel(1, 1);
 
-		$tscLib->closeport();
+		$tscLib->closeport();*/
+
+		$connector = new NetworkPrintConnector($ip, $port);
+		$tscLib = new TscLib($connector);
+
+		$estado = $tscLib->status();
+		if($estado == TscLib::ESTADO_NORMAL){
+			print_r("OK");
+		} else {
+			print_r($estado);
+		}
+		//$tscLib->sendCommand("\x1b!\x3f");
+		//$tscLib->sendCommand("\x1b\x21\x3f");
+		//$tscLib->sendCommand("\x1b" . "!" . chr(63));
+		//
+		//print_r($tscLib->getResponseCommand());
+
+		//print_r(dirname(__FILE__));
+		//print_r($tscLib->getPath());
 	}
 
 }
